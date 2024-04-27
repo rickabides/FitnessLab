@@ -10,8 +10,8 @@ app.secret_key = os.urandom(24)
 HOST = "https://0560bfbf6f6f420999a20420a6208cfa.i.tgcloud.io/"
 GRAPH_NAME = "FitnessClasses"
 USERNAME = "user_3"
-PASSWORD = "Ok8Zn7Fj8Nu7Hb8^"
-SECRET = 'tlbrfms9o31lk5muk8pbtf0d0avubhq3'
+PASSWORD = "YOURPASS"
+SECRET = 'APISECRET'
 
 tg_helper = TigerGraphHelper(host=HOST, graphname=GRAPH_NAME, username=USERNAME, password=PASSWORD, secret=SECRET)
 
