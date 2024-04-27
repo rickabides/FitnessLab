@@ -10,8 +10,8 @@ app.secret_key = os.urandom(24)
 HOST = "https://0560bfbf6f6f420999a20420a6208cfa.i.tgcloud.io/"
 GRAPH_NAME = "FitnessClasses"
 USERNAME = "user_3"
-PASSWORD = "YOURPASS"
-SECRET = 'APISECRET'
+PASSWORD = ""
+SECRET = ''
 
 tg_helper = TigerGraphHelper(host=HOST, graphname=GRAPH_NAME, username=USERNAME, password=PASSWORD, secret=SECRET)
 
@@ -88,4 +88,4 @@ def cancel_registration():
         return jsonify({"success": False, "message": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080)
