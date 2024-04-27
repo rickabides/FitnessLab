@@ -1,0 +1,67 @@
+<!-- templates/index.html -->
+<html>
+<head><title>Class Management System</title></head>
+<body>
+  <h1>Sign Up</h1>
+  <form action="/signup" method="post">
+    Age: <input type="text" name="age"><br>
+    Gender: <input type="text" name="gender"><br>
+    Membership Level: <input type="text" name="membership_level"><br>
+    Weight: <input type="text" name="weight"><br>
+    <input type="submit" value="Sign Up">
+  </form>
+  
+  <h1>Create Class</h1>
+  <form action="/create_class" method="post">
+    Category: <input type="text" name="category"><br>
+    Difficulty Level: <input type="number" name="difficulty_level"><br>
+    Name: <input type="text" name="name"><br>
+    Typical Duration (minutes): <input type="number" name="typical_duration"><br>
+    <input type="submit" value="Create Class">
+  </form>
+
+<h1>Create Session</h1>
+<form action="/create_session" method="post">
+  Class ID: <input type="text" name="class_id"><br>
+  Capacity: <input type="number" name="capacity"><br>
+  Room: <input type="text" name="room"><br>
+  Specific Date (YYYY-MM-DD): <input type="date" name="specific_date"><br>
+  Start Time (HH:MM:SS): <input type="time" name="start_time"><br>
+  End Time (HH:MM:SS): <input type="time" name="end_time"><br>
+  <input type="submit" value="Create Session">
+</form>
+
+<h1>Register for Session</h1>
+<form action="/register" method="post">
+  User ID: <input type="text" name="user_id"><br>
+  Session ID: <input type="text" name="session_id"><br>
+  <input type="submit" value="Register">
+</form>
+
+<h1>Cancel Registration</h1>
+<form action="/cancel_registration" method="post">
+  User ID: <input type="text" name="user_id"><br>
+  Session ID: <input type="text" name="session_id"><br>
+  <input type="submit" value="Cancel Registration">
+</form>
+<script>
+document.querySelector('form').onsubmit = function(e) {
+    const timeInput = document.getElementById('time');
+    let timeValue = timeInput.value;
+
+    // Check if the time includes seconds
+    if (!timeValue.includes(':')) {
+        timeValue += ':00'; // Append seconds if not present
+    } else {
+        const parts = timeValue.split(':');
+        if (parts.length === 2) { // HH:MM
+            timeValue += ':00'; // Append seconds
+        }
+    }
+
+    timeInput.value = timeValue; // Set the formatted value
+};
+</script>
+
+</body>
+</html>
