@@ -22,20 +22,18 @@ def index():
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    age = request.form['age']
-    gender = request.form['gender']
-    join_date = datetime.now()  # Assume current time as join date
-    membership_level = request.form['membership_level']
-    weight = request.form.get('weight', 0) # if empty enter 0
-    
-    result, membership_id = tg_helper.create_user(age, gender, join_date, membership_level, weight)
-
-    # Return the entire result along with specific details
-    return jsonify({
-        "success": True,
-        "message": "User created",
-        "Membership_ID": membership_id,
-        "data": result})
+    try:
+        user_data = {
+            'age': request.form['age'],
+            'gender': request.form['gender'],
+            'join_date': datetime.now(),
+            'membership_level': request.form['membership_level'],
+            'weight': request.form.get('weight', 0)
+        }
+        result, membership_id = tg_helper.create_user(**user_data)
+        return jsonify({"success": True, "message": "User created", "Membership_ID": membership_id})
+    except KeyError as e:
+        return jsonify({"success": False, "message": f"Missing parameter: {e}"}), 400
  
 @app.route('/create_class', methods=['POST'])
 def create_class():
@@ -43,8 +41,9 @@ def create_class():
     difficulty_level = int(request.form['difficulty_level'])
     name = request.form['name']
     typical_duration = int(request.form['typical_duration'])
-    result = tg_helper.create_class(category, difficulty_level, name, typical_duration)
-    return jsonify({"success": True, "message": "Class created", "data": result})
+    # Assuming 'create_class' in 'TigerGraphHelper' returns success status and class name or ID
+    result, class_id = tg_helper.create_class(category, difficulty_level, name, typical_duration)
+    return jsonify({"success": True, "message": "Class created", "data": {"Name": name, "Class_ID": class_id}})
 
 @app.route('/create_session', methods=['POST'])
 def create_session():
@@ -63,6 +62,15 @@ def create_session():
          "session_id": session_id,
          "data": result})
 
+@app.route('/create_instructor', methods=['POST'])
+def create_instructor():
+    name = request.form['name']
+    specialization = request.form['specialization']
+    years_of_experience = request.form['years_of_experience']
+    # Assuming 'create_instructor' in 'TigerGraphHelper' handles the creation logic
+    result, instructor_id = tg_helper.create_instructor(name, specialization, int(years_of_experience))
+    return jsonify({"success": True, "message": "Instructor created", "data": {"Name": name, "Instructor_ID": instructor_id}})
+
 @app.route('/register', methods=['POST'])
 def register():
     user_id = request.form['user_id']
@@ -72,20 +80,12 @@ def register():
 
 @app.route('/cancel_registration', methods=['POST'])
 def cancel_registration():
-    user_id = request.form['user_id']
-    session_id = request.form['session_id']
-
+    user_id = request.form.get('user_id')
+    session_id = request.form.get('session_id')
     if not user_id or not session_id:
         return jsonify({"success": False, "message": "User ID and Session ID are required"}), 400
-
-    try:
-        result = tg_helper.cancel_user_registration(user_id, session_id)
-        if result:
-            return jsonify({"success": True, "message": "Registration canceled successfully"})
-        else:
-            return jsonify({"success": False, "message": "Failed to cancel registration"}), 404
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
+    success = tg_helper.cancel_user_registration(user_id, session_id)
+    return jsonify({"success": success, "message": "Cancelled successfully" if success else "Cancellation failed"})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=8080)
